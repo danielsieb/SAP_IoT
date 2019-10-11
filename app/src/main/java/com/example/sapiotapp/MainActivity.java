@@ -26,6 +26,8 @@ import javax.net.ssl.SSLContext;
 
 public class MainActivity extends WearableActivity implements SensorEventListener {
 
+    private int THRESHOLD_LOW = 50;
+    private int THRESHOLD_HIGH = 180;
     private int heart_rate;
     private boolean heart_rate_low;
 
@@ -87,24 +89,30 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         public void run() {
 
             if (heart_rate != 0) {
-                if (heart_rate < 80) {
+                if (heart_rate < THRESHOLD_HIGH) {
                     heart_rate_low = true;
-                } else if (heart_rate > 80) {
+                    sendAlertToSap();
+                    sendPushToFirebase();
+                } else if (heart_rate > THRESHOLD_LOW) {
                     heart_rate_low = false;
+                    sendAlertToSap();
+                    sendPushToFirebase();
+                } else {
+                    System.out.println("Heart rate seems okay.");
                 }
-                sendAlert();
-                //sendNotification();
-
             } else {
-                System.out.println("Everything seems fine.");
+                System.out.println("Heart rate is not detected.");
             }
 
             timerHandler.postDelayed(this, 3000);
         }
     };
 
+    private void sendPushToFirebase() {
 
-    private void sendAlert() {
+    }
+
+    private void sendAlertToSap() {
 
         /**
          //INSERT HERE THE VALUES of your IoT service, which can be found in the IoT Service Cockpit
