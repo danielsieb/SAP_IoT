@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "950827977070",
+    "firebase_url": "https://wearos-aab32.firebaseio.com",
+    "project_id": "wearos-aab32",
+    "storage_bucket": "wearos-aab32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950827977070:android:d32a59d4114bb535f1997f",
+        "android_client_info": {
+          "package_name": "com.example.sapiotapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950827977070-khq9pm7036i1cfr52n6vja6cj21crfpo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sapiotapp",
+            "certificate_hash": "02b81c23af6eaaf766fd67017f58bd6593f47218"
+          }
+        },
+        {
+          "client_id": "950827977070-l4hpoio6rq7lftm67b6899utn2qtpfg8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sapiotapp",
+            "certificate_hash": "c80d53f3330a15392fb8c4ff0c944e1f0d608ca7"
+          }
+        },
+        {
+          "client_id": "950827977070-hlucltcgssu15s2mg9is6ind95kvp1m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQjb1zAsNC5IBYE0pfMX1Ee0LCXq19dNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950827977070-hlucltcgssu15s2mg9is6ind95kvp1m9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
