@@ -30,7 +30,9 @@ import javax.net.ssl.SSLContext;
 public class MainActivity extends WearableActivity implements SensorEventListener {
 
     private int heart_rate;
-    private boolean heart_rate_low;
+    private int UPPER_THRESHOLD = 120;
+    private int LOWER_THRESHOLD = 50;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //this is a workaround to allow the app to perform a timer in the main GUI process
@@ -65,15 +67,18 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             }
         });
     }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
             heart_rate = (int) event.values[0];
         }
     }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
 
@@ -81,19 +86,12 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         public void run() {
 
             if (heart_rate != 0) {
-                if (heart_rate < 80) {
-                    heart_rate_low = true;
-                    sendAlert();
-                } else if (heart_rate > 80) {
-                    heart_rate_low = false;
-                    sendAlert();
+                if (heart_rate < LOWER_THRESHOLD) {
+
+                } else if (heart_rate > UPPER_THRESHOLD) {
+
                 }
-
-                //sendNotification();
-
-            } else {
-                System.out.println("Everything seems fine.");
-
+                sendDataToSAP(heart_rate);
             }
             timerHandler.postDelayed(this, 3000);
         }
@@ -119,30 +117,26 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onNewIntent(intent);
     }
 
-    private void sendAlert() {
+    private void sendDataToSAP(int sensor_data) {
         /**
          //INSERT HERE THE VALUES of your IoT service, which can be found in the IoT Service Cockpit
          **/
         String DEVICE_ALTERNATE_ID = "4cd0f5ad-9e47-4709-86ac-3051c036b85e";
         String SENSOR_ALTERNATE_ID = "e6ab678c-7d79-4030-85ef-08f7eae6d794";
         String TENANT = "1cf82f59-f178-4c3a-9b37-04ad4c472ede.eu10.cp.iot.sap";
-        String CAPABILITY_ALTERNATE_ID = "a40a3786-651c-40f8-92f9-4fee2ba01d1f";
+        String CAPABILITY_ALTERNATE_ID = "23e27bc7-8bc8-4b57-aaae-b09a6c0982b1";
         try {
             //Parameterised Url and post request to send to the Cloud platform
             String START = "https://";
             String MAIN = "/iot/gateway/rest/measures/";
             String POST_ADDRESS = (START + TENANT + MAIN + DEVICE_ALTERNATE_ID);
             URL urlAddress = new URL(POST_ADDRESS);
+
             JSONObject stepCountJson = new JSONObject();
-            if (heart_rate_low) {
-                stepCountJson.put("Message", "Heart rate is too low!");
-            } else {
-                stepCountJson.put("Message", "Heart rate is too high!");
-            }
-            //
+            stepCountJson.put("heartRate", sensor_data);
             JSONArray jsonArray = new JSONArray();
             jsonArray.put(stepCountJson);
-            // jsonArray.put(stepHeart);
+
             JSONObject bodyJson = new JSONObject();
             bodyJson.put("capabilityAlternateId", CAPABILITY_ALTERNATE_ID);
             bodyJson.put("sensorAlternateId", SENSOR_ALTERNATE_ID);
