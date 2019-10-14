@@ -1,9 +1,16 @@
 package com.example.sapiotapp;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import static android.provider.CalendarContract.EXTRA_EVENT_ID;
 
 public class FCM extends FirebaseMessagingService {
 
@@ -38,10 +45,37 @@ public class FCM extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
            // sendNotification(remoteMessage.getNotification().getBody());
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+
+            sendNotification(remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+    }
+
+    private void sendNotification(String messageBody){
+        int notificationId = 001;
+        // The channel ID of the notification.
+        String id = "my_channel_01";
+        // Build intent for notification content
+        Intent viewIntent = new Intent(this, MainActivity.class);
+        int eventId= 100 ;
+
+        viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(this, 0, viewIntent, 0);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, id)
+                        .setSmallIcon(R.drawable.ic_stat_ic_notification)
+                        .setContentTitle("IoT Alert")
+                        .setContentText(messageBody)
+                        .setContentIntent(viewPendingIntent);
+        // Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+        // Issue the notification with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
+        System.out.println("Notification sent");
     }
 
     /**
@@ -58,28 +92,5 @@ public class FCM extends FirebaseMessagingService {
         // Instance ID token to your app server.
        // sendRegistrationToServer(token);
     }
-
-    /*private void sendNotification(String messageBody){
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,channelId)
-                .setSmallIcon(R.drawable.action_item_icon_background)
-                .setContentTitle(getString(R.string.fcm_message))
-                .setContentText(messageBody)
-                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0,notificationBuilder.build());
-
-    }*/
 
 }

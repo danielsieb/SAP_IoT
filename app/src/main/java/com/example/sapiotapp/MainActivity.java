@@ -2,7 +2,6 @@ package com.example.sapiotapp;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,9 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,8 +26,6 @@ import java.security.KeyStore;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-
-import static android.provider.CalendarContract.EXTRA_EVENT_ID;
 
 public class MainActivity extends WearableActivity implements SensorEventListener {
 
@@ -95,7 +89,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                     sendAlert();
                 }
 
-                sendNotification(heart_rate);
+                //sendNotification();
 
             } else {
                 System.out.println("Everything seems fine.");
@@ -123,31 +117,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-    }
-
-    private void sendNotification(int heart_rate){
-        int notificationId = 001;
-// The channel ID of the notification.
-        String id = "my_channel_01";
-// Build intent for notification content
-        Intent viewIntent = new Intent(this, MainActivity.class);
-        int eventId= 100 ;
-        //
-        viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(this, 0, viewIntent, 0);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, id)
-                        .setSmallIcon(R.drawable.ic_stat_ic_notification)
-                        .setContentTitle("Check Heart Rate")
-                        .setContentText("Heart Rate is "+heart_rate)
-                        .setContentIntent(viewPendingIntent);
-        // Get an instance of the NotificationManager service
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-// Issue the notification with notification manager.
-        notificationManager.notify(notificationId, notificationBuilder.build());
-        System.out.println("Notification sent");
     }
 
     private void sendAlert() {
