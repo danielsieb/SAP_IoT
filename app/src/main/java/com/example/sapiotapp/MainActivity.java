@@ -46,9 +46,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SensorManager mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
-        Sensor mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
         //a simple button to start and stop the timer for sending the sensor data to the Cloud platform
         Button b = (Button) findViewById(R.id.button);
         b.setText("start");
@@ -56,11 +53,15 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
             @Override
             public void onClick(View v) {
+                SensorManager mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
+                Sensor mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
                 Button b = (Button) v;
                 if (b.getText().equals("stop")) {
+                    mSensorManager.unregisterListener(MainActivity.this, mHeartRateSensor);
                     timerHandler.removeCallbacks(timerRunnable);
                     b.setText("start");
                 } else {
+                    mSensorManager.registerListener(MainActivity.this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
                     timerHandler.postDelayed(timerRunnable, 0);
                     b.setText("stop");
                 }
@@ -176,9 +177,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     public void onPause() {
         super.onPause();
-        timerHandler.removeCallbacks(timerRunnable);
+        /*timerHandler.removeCallbacks(timerRunnable);
         Button b = (Button)findViewById(R.id.button);
-        b.setText("start");
+        b.setText("start");*/
     }
 
 }
