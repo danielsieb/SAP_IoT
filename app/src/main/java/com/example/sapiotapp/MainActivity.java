@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -93,10 +96,19 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
                 }
                 sendDataToSAP(heart_rate);
+                sendDataToFirebase(heart_rate);
             }
             timerHandler.postDelayed(this, 3000);
         }
     };
+
+    private void sendDataToFirebase(int sensor_data) {
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
+    }
 
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -113,6 +125,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         notificationManager.createNotificationChannel(channel);
         System.out.println("Success channel");
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
