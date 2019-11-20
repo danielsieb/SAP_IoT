@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "950827977070-qus54lfh542rp497bkpdd96pdm6fnhdt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sapiotapp",
+            "certificate_hash": "4745fd0e5f9a1ad54a4efd6971e4d3b892a05c86"
+          }
+        },
+        {
           "client_id": "950827977070-khq9pm7036i1cfr52n6vja6cj21crfpo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

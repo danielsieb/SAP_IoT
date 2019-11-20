@@ -10,6 +10,13 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import static android.provider.CalendarContract.EXTRA_EVENT_ID;
 
 public class FCM extends FirebaseMessagingService {
@@ -21,7 +28,6 @@ public class FCM extends FirebaseMessagingService {
 
         //sendNotification(remoteMessage.getNotification().getBody());
         // ...
-        String TAG = "ROY";
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
@@ -43,10 +49,34 @@ public class FCM extends FirebaseMessagingService {
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-           // sendNotification(remoteMessage.getNotification().getBody());
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
             sendNotification(remoteMessage.getNotification().getBody());
+            // sending notification to own application (TESTING ONLY)
+            // watch emulator token: fEKgPGlm-4E:APA91bHqcV47rB6k5J2uZ0QJObAIyXDNUS9ISapnfa28oITipwkWaGcjPaP5dXGM1m17afABrTGeFgLQgOrhDxmaQTr6UX6QljbjtRNUteyUhnLvdAmkHSDFsa6-v2ss6xIn3PbwuXBl
+            try {
+                JSONObject subJSON = new JSONObject();
+                subJSON.put("title", "Firebase");
+                subJSON.put("body", "Watch responded");
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("notification",subJSON);
+                jsonObject.put("to","dED-g7Njjxs:APA91bEIXrI_ycac4aBB4WJUE2dLFBeFp6kazSHnlcY1PpfRgY8N-MZ7kfbWIYFfHv-KtAQwtNSvUAzqCP2n95rK-lzkj3ZLX02x3MJpVnPabGbWLd02aFj6DZqQ8uz4MQl5lAxrqdPE");
+                String msg = jsonObject.toString();
+                String url = "https://fcm.googleapis.com/fcm/send";
+                URL urlAddress = new URL(url);
+                HttpsURLConnection connection  = (HttpsURLConnection) urlAddress.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+                connection.setRequestProperty("Authorization", "key=AAAA3WHDiW4:APA91bHsHR2bnPzh-1MvR8NRKH35T3-Pm7QpIws8fh72J0Rdh5SPTz-cE5V8eAx2IUwtYHdLc-1mtO4l0yGfCuJSDPg5nb0h9YoTQl-vtTUb9w2-g48gkJo1RL9ak_HtBXD6sCOL5Dxr");
+                //Sending the message
+                byte[] bytes = msg.getBytes("UTF_8");
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(bytes);
+                int status = connection.getResponseCode();
+                System.out.println("Response status: " + String.valueOf(status));
+            } catch (Exception ex) {
+                System.out.println("Error occured while sending notification: "+ ex);
+            }
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

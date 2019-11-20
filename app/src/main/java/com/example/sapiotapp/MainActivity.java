@@ -59,6 +59,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 SensorManager mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
                 Sensor mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
                 Button b = (Button) v;
+                System.out.println("Button clicked.");
                 if (b.getText().equals("stop")) {
                     mSensorManager.unregisterListener(MainActivity.this, mHeartRateSensor);
                     timerHandler.removeCallbacks(timerRunnable);
